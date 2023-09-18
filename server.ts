@@ -1,34 +1,45 @@
-const sharedHeaders = new Headers({
-  "Content-Type": "application/json",
-  "Vary": "Origin",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "*",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, PATCH, OPTIONS",
-});
+const createHeaders = (override: HeadersInit = {}) =>
+  new Headers({
+    "Vary": "Origin",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, PATCH, OPTIONS",
+    ...override,
+  });
 
-Deno.serve(async (req, _info) => {
-  const body = await req.json().catch(() => undefined);
+Deno.serve((req, _info) => {
+  const responseBody = JSON.stringify({
+    message: "Hello!",
+  });
 
   switch (req.method) {
     case "OPTIONS":
       return new Response(null, {
         status: 204,
-        headers: sharedHeaders,
+        headers: createHeaders(),
       });
     case "GET":
-      return new Response(JSON.stringify({ message: "Hi!" }), {
+      return new Response(responseBody, {
         status: 200,
-        headers: sharedHeaders,
+        headers: createHeaders(),
       });
     case "PATCH":
-      return new Response(JSON.stringify(body), {
+      return new Response(responseBody, {
         status: 200,
-        headers: sharedHeaders,
+        headers: createHeaders(),
+      });
+    case "POST":
+    case "PUT":
+    case "DELETE":
+    case "HEAD":
+      return new Response(null, {
+        status: 405,
+        headers: createHeaders({ "Content-Type": "text/plain" }),
       });
     default:
       return new Response(null, {
         status: 404,
-        headers: sharedHeaders,
+        headers: createHeaders({ "Content-Type": "text/plain" }),
       });
   }
 });
