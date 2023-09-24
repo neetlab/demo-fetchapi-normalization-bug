@@ -1,9 +1,9 @@
 const createHeaders = (override: HeadersInit = {}) =>
   new Headers({
-    "Vary": "Origin",
+    Vary: "Origin",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, PATCH, OPTIONS",
+    "Access-Control-Allow-Methods": "*",
     ...override,
   });
 
