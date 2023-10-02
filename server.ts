@@ -32,13 +32,9 @@ Deno.serve((req, _info) => {
     case "PUT":
     case "DELETE":
     case "HEAD":
-      return new Response(null, {
-        status: 405,
-        headers: createHeaders({ "Content-Type": "text/plain" }),
-      });
     default:
       return new Response(null, {
-        status: 404,
+        status: 405,
         headers: createHeaders({ "Content-Type": "text/plain" }),
       });
   }
